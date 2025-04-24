@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import WebSocketChat from './components/WebSocketChat';
+import TCPClient from './components/TCPClient';
+import './styles/theme.css'; // Импортируем общие стили
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container theme-background"> {/* Применяем тематический класс */}
+      <h1>Квантовая Сеть Межпланетной Торговли</h1>
+      <div className="content-wrapper">
+        <WebSocketChat />
+        <TCPClient />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,116 @@
+/* Общие стили для тела страницы */
+body {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace; /* Шрифт терминала */
+    background-color: #0a0a2a; /* Темно-синий/фиолетовый фон */
+    color: #00ff00; /* Яркий зеленый текст */
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #00ffff; /* Бирюзовая рамка */
+    box-shadow: 0 0 20px #00ffff; /* Бирюзовая тень */
+    background-color: #1a1a3a; /* Немного светлее фон для контейнера */
+}
+
+h1, h2 {
+    color: #ffff00; /* Желтые заголовки */
+    text-align: center;
+    text-shadow: 0 0 5px #ffff00; /* Желтая тень для заголовков */
+}
+
+.content-wrapper {
+    display: flex;
+    gap: 40px; /* Расстояние между блоками */
+    flex-wrap: wrap; /* Перенос блоков на новую строку на маленьких экранах */
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.theme-terminal {
+    flex: 1; /* Занимает доступное место */
+    min-width: 300px; /* Минимальная ширина, чтобы не стать слишком узким */
+    background-color: #0d0d2d; /* Еще темнее фон для терминальных блоков */
+    padding: 20px;
+    border: 1px solid #00ffff;
+    box-shadow: 0 0 15px #00ffff;
+    display: flex;
+    flex-direction: column;
+}
+
+.connection-status {
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.connection-status.connected {
+    color: #00ff00; /* Зеленый */
+}
+
+.connection-status.disconnected {
+    color: #ff0000; /* Красный */
+}
+
+.messages-window, .response-area.theme-window {
+    flex-grow: 1; /* Окно сообщений занимает оставшееся пространство */
+    background-color: #05051a; /* Самый темный фон для окон вывода */
+    border: 1px solid #00ff00; /* Зеленая рамка */
+    padding: 15px;
+    margin-bottom: 15px;
+    overflow-y: auto; /* Прокрутка, если сообщений много */
+    max-height: 400px; /* Ограничиваем высоту */
+}
+
+.message {
+    margin: 5px 0;
+    word-break: break-word; /* Перенос длинных слов */
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: auto; /* Прижимает область ввода к низу контейнера flex */
+}
+
+.theme-input {
+    flex-grow: 1; /* Поле ввода занимает доступное место */
+    padding: 10px;
+    background-color: #2a2a4a; /* Темный фон */
+    border: 1px solid #00ffff;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    resize: vertical; /* Разрешить изменение размера по вертикали для textarea */
+}
+
+.theme-input::placeholder {
+    color: #00aa00; /* Более темный зеленый для плейсхолдера */
+}
+
+.theme-button {
+    padding: 10px 20px;
+    background-color: #00aaff; /* Голубая кнопка */
+    color: #ffffff; /* Белый текст */
+    border: none;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.theme-button:hover {
+    background-color: #0077cc; /* Темнее при наведении */
+}
+
+.theme-button:disabled {
+    background-color: #555555;
+    cursor: not-allowed;
+}
+
+.response-area {
+     margin-top: 20px;
+}

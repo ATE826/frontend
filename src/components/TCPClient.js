@@ -7,6 +7,11 @@ function TCPClient() {
     const [isLoading, setIsLoading] = useState(false);
 
     const sendContract = async () => {
+        if (!contractData.trim()) { // Проверяем, что поле ввода не пустое
+            setResponse('Введите условия контракта.');
+            return;
+        }
+
         setIsLoading(true);
         setResponse('Отправка контракта...');
         try {
@@ -20,12 +25,15 @@ function TCPClient() {
             });
 
             if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                // Попытаемся прочитать ошибку из тела ответа, если доступно
+                const errorText = await res.text().catch(() => res.statusText);
+                throw new Error(`HTTP error! Status: ${res.status}. Details: ${errorText}`);
             }
 
             const data = await res.text(); // Читаем ответ как текст
             setResponse(`Ответ Терминала Контрактов: ${data}`);
             console.log('Получен ответ по контракту:', data);
+            setContractData(''); // Очищаем поле ввода после успешной отправки
 
         } catch (error) {
             console.error("Ошибка при отправке контракта:", error);
@@ -39,8 +47,9 @@ function TCPClient() {
         setContractData(event.target.value);
     };
 
-    const handleKeyPress = (event) => {
-         if (event.key === 'Enter') {
+     const handleKeyPress = (event) => {
+         if (event.key === 'Enter' && !event.shiftKey) { // Отправляем по Enter, но не по Shift+Enter
+             event.preventDefault(); // Предотвращаем ввод новой строки в textarea
              sendContract();
          }
      };
@@ -56,14 +65,15 @@ function TCPClient() {
                     placeholder="Введите условия контракта..."
                     rows="4"
                     cols="50"
-                    className="theme-input" {/* Применяем тематический класс */}
-                />
+                    className="theme-input"
+                /> {/* Применяем тематический класс */}
             </div>
-            <button onClick={sendContract} disabled={isLoading} className="theme-button"> {/* Применяем тематический класс */}
-                {isLoading ? 'Подписание...' : 'Подписать Контракт'}
+            <button onClick={sendContract} disabled={isLoading || contractData.trim() === ''} className="theme-button">
+                {isLoading ? 'Подписание...' : 'Подписать Контракт'} {/* Применяем тематический класс */}
             </button>
+            {/* Область вывода ответа */}
             {response && (
-                <div className="response-area theme-window"> {/* Применяем тематические классы */}
+                <div className="response-area theme-window">
                     <h3>Статус Контракта:</h3>
                     <p>{response}</p>
                 </div>

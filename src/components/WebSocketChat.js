@@ -21,7 +21,14 @@ function WebSocketChat() {
         ws.current.onmessage = (event) => {
             // Добавляем новое сообщение в список
             console.log('Получено сообщение:', event.data);
-            setMessages(prevMessages => [...prevMessages, event.data]);
+            // Парсим JSON, если сообщения приходят в формате JSON
+            // try {
+            //     const message = JSON.parse(event.data);
+            //     setMessages(prevMessages => [...prevMessages, message]); // Если сообщение - объект
+            // } catch (e) {
+                 // Если сообщение - просто текст
+                 setMessages(prevMessages => [...prevMessages, event.data]);
+            // }
         };
 
         ws.current.onerror = (error) => {
@@ -49,12 +56,12 @@ function WebSocketChat() {
     }, []); // Пустой массив зависимостей означает, что эффект выполняется один раз при монтировании и один раз при размонтировании
 
     const sendMessage = () => {
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN && inputMessage.trim()) { // Проверяем, что сообщение не пустое
             console.log('Отправка сообщения:', inputMessage);
-            ws.current.send(inputMessage);
+            ws.current.send(inputMessage.trim()); // Отправляем обрезанное сообщение
             setInputMessage(''); // Очищаем поле ввода
         } else {
-            console.warn('WebSocket не подключен.');
+            console.warn('WebSocket не подключен или сообщение пустое.');
         }
     };
 
@@ -63,9 +70,10 @@ function WebSocketChat() {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
+        if (event.key === 'Enter' && !event.shiftKey) { // Отправляем по Enter, но не по Shift+Enter
+             event.preventDefault(); // Предотвращаем ввод новой строки в поле ввода
+             sendMessage();
+         }
     };
 
     return (
@@ -74,11 +82,14 @@ function WebSocketChat() {
             <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
                 Статус: {isConnected ? 'Подключено' : 'Отключено'}
             </div>
-            <div className="messages-window theme-window"> {/* Применяем тематические классы */}
+            {/* Окно сообщений */}
+            <div className="messages-window theme-window">
                 {messages.map((msg, index) => (
+                    // Предполагаем, что msg это строка. Если это объект, нужно адаптировать вывод.
                     <p key={index} className="message">{msg}</p>
                 ))}
             </div>
+            {/* Область ввода и кнопка */}
             <div className="input-area">
                 <input
                     type="text"
@@ -86,10 +97,10 @@ function WebSocketChat() {
                     onChange={handleInputChange}
                     onKeyPress={handleKeyPress}
                     placeholder="Сделать ставку или отправить сообщение..."
-                    className="theme-input" {/* Применяем тематический класс */}
-                />
-                <button onClick={sendMessage} disabled={!isConnected} className="theme-button"> {/* Применяем тематический класс */}
-                    Отправить
+                    className="theme-input"
+                /> {/* Применяем тематический класс */}
+                <button onClick={sendMessage} disabled={!isConnected || inputMessage.trim() === ''} className="theme-button">
+                    Отправить {/* Применяем тематический класс */}
                 </button>
             </div>
         </div>
